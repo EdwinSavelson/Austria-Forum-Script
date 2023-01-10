@@ -50,23 +50,33 @@ async function editAllTexts(urlArray) {
         }
 
         //OBJECT TO STRING IN ORDER TO WRITE TO FILE
+        //LOG ALL INFO ON EACH ARTICLE BEFORE SAVING CHANGES
         let toWrite = `${JSON.stringify(articleComplete)},\n\n`;
         //TODO: FIX BEGINNING AND ENDING OF JSON FILE
-        fs.appendFile('file.json', toWrite);
+        fs.appendFile('file.json', toWrite, err => {
+            if (err) {
+              console.error(err);
+            }
+        });
 
         if (articleComplete.edited === true) {
             completedArticles.push(articleURL);
 
             //!PRESS SUBMIT BUTTON DO NOT UNCOMMENT UNTIL READY 
             //TODO: Await?
-            // await driver.findElement(By.id("editform")).submit();
-
+            let submitted = await driver.findElement(By.name('editor')).submit();;
+            
         } else {
             uncompletedArticles.push(articleURL);
         }
     }
 
-    //TODO: Add file for failed URLS
+    fs.appendFile('uncompleted.log', uncompletedArticles.toString(),err => {
+        if (err) {
+          console.error(err);
+        }
+    });
+
     console.log("Articles edited successfully: " + completedArticles.length + '\n' + "Articles failed: " + uncompletedArticles.length);
     return uncompletedArticles;
 }
