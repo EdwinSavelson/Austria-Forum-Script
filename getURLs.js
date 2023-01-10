@@ -18,7 +18,6 @@ async function getURLS() {
             //ITERATES OVER ALL LINKS AND CHECKS IF THEY END IT "(AP)" THEN PUSHES THEIR href TO tempQueue
             if (stringArray[stringArray.length - 2] === ")" && stringArray[stringArray.length - 3] === "P" && stringArray[stringArray.length - 4] === "A" && stringArray[stringArray.length - 5] === "(") {
 
-
                 //Edit URL to direct to the "edit" page directly
                 let currentURL = "https://austria-forum.org/Edit.jsp?page=" + htmlElement.firstElementChild.href.slice(28);
                 tempQueue.push(currentURL);

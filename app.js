@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { type } = require('os');
 
 const webdriver = require('selenium-webdriver'),
     By = webdriver.By,
@@ -23,7 +24,7 @@ async function runScript(url, script) {
         let result = await driver.executeScript(fileContent);
         return result;
     } catch (error) {
-        console.log("ERROR AT URL: " + url + '\n'+ error);
+        console.log("ERROR AT URL: " + url);
     }
 }
 
@@ -34,23 +35,42 @@ async function editAllTexts(urlArray) {
 
     for (const articleURL of urlArray) {
         //editText.js SCRIPT RETURNS OBJECT WITH KEYS 
+        //articleURL: string
         //edited: boolean
         //originalText: string,
         //newText: string(if edited)
         let articleComplete = await runScript(articleURL, "editText.js");
 
+        //IF ARTICLE COMES BACK WITH NOTHING - LOG THE URL AND EDITED FALSE
+        if (articleComplete === undefined) {
+            articleComplete = {
+                "articleURL": articleURL,
+                "edited": false
+            };
+        }
+
+        //OBJECT TO STRING IN ORDER TO WRITE TO FILE
+        let toWrite = `${JSON.stringify(articleComplete)},\n\n`;
+        //TODO: FIX BEGINNING AND ENDING OF JSON FILE
+        fs.appendFile('file.json', toWrite, err => {
+            if (err) {
+                console.error(err);
+            }
+        });
+
         if (articleComplete.edited === true) {
             completedArticles.push(articleURL);
 
             //!PRESS SUBMIT BUTTON DO NOT UNCOMMENT UNTIL READY 
-            // driver.find_element_by_id("editform").submit();
-
-            //TODO: WRITE CONTENT TO FILE
+            //TODO: Await?
+            // await driver.findElement(By.id("editform")).submit();
 
         } else {
             uncompletedArticles.push(articleURL);
         }
     }
+
+    //TODO: Add file for failed URLS
     console.log("Articles edited successfully: " + completedArticles.length + '\n' + "Articles failed: " + uncompletedArticles.length);
     return uncompletedArticles;
 }
@@ -63,10 +83,10 @@ async function run() {
     console.log(loggedIn);
     // GET LINKS TO EDIT
     let urlList = await runScript("https://austria-forum.org/af/Geography/About/Main_Ideas/Current_List_of_Stories", "getURLs.js")
-    console.log(urlList);
+    // console.log(urlList);
     //EDIT LINKS
-    //!Currently just two items in array
-    let results = await editAllTexts(urlList.slice(0, 2));
+    //! Currently just two items in array
+    let results = await editAllTexts(urlList.slice(0, 3));
     // console.log(results);
 
 }
