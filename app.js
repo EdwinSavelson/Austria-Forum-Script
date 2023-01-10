@@ -1,11 +1,9 @@
 const fs = require('fs');
-const { type } = require('os');
 
 const webdriver = require('selenium-webdriver'),
     By = webdriver.By,
     until = webdriver.until;
 
-const chrome = require("selenium-webdriver/chrome");
 
 //Create automation environment
 const driver = new webdriver.Builder()
@@ -52,28 +50,27 @@ async function editAllTexts(urlArray) {
         //OBJECT TO STRING IN ORDER TO WRITE TO FILE
         //LOG ALL INFO ON EACH ARTICLE BEFORE SAVING CHANGES
         let toWrite = `${JSON.stringify(articleComplete)},\n\n`;
-        //TODO: FIX BEGINNING AND ENDING OF JSON FILE
         fs.appendFile('file.json', toWrite, err => {
             if (err) {
-              console.error(err);
+                console.error(err);
             }
         });
 
         if (articleComplete.edited === true) {
-            completedArticles.push(articleURL);
 
             //!PRESS SUBMIT BUTTON DO NOT UNCOMMENT UNTIL READY 
-            //TODO: Await?
-            let submitted = await driver.findElement(By.name('editor')).submit();;
-            
+            let submit = await driver.wait(until.elementLocated(By.name('ok')), 5000);
+            await submit.click();
+            completedArticles.push(articleURL);
+
         } else {
             uncompletedArticles.push(articleURL);
         }
     }
 
-    fs.appendFile('uncompleted.log', uncompletedArticles.toString(),err => {
+    fs.appendFile('uncompleted.log', `${uncompletedArticles.toString()}\n`, err => {
         if (err) {
-          console.error(err);
+            console.error(err);
         }
     });
 
@@ -90,10 +87,9 @@ async function run() {
     // GET LINKS TO EDIT
     let urlList = await runScript("https://austria-forum.org/af/Geography/About/Main_Ideas/Current_List_of_Stories", "getURLs.js")
     // console.log(urlList);
-    //EDIT LINKS
+    // EDIT LINKS
     //! Currently just two items in array
-    let results = await editAllTexts(urlList.slice(0, 3));
-    // console.log(results);
+    // let results = await editAllTexts(urlList);
 
 }
 run();
