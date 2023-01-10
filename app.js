@@ -52,11 +52,7 @@ async function editAllTexts(urlArray) {
         //OBJECT TO STRING IN ORDER TO WRITE TO FILE
         let toWrite = `${JSON.stringify(articleComplete)},\n\n`;
         //TODO: FIX BEGINNING AND ENDING OF JSON FILE
-        fs.appendFile('file.json', toWrite, err => {
-            if (err) {
-                console.error(err);
-            }
-        });
+        fs.appendFile('file.json', toWrite);
 
         if (articleComplete.edited === true) {
             completedArticles.push(articleURL);
