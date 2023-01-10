@@ -14,3 +14,5 @@ async function submitLogin() {
 
 
 submitLogin();
+
+return "Logged in"
