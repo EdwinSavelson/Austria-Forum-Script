@@ -88,7 +88,7 @@ async function run() {
     let urlList = await runScript("https://austria-forum.org/af/Geography/About/Main_Ideas/Current_List_of_Stories", "getURLs.js")
     // console.log(urlList);
     // EDIT LINKS
-    //! Currently just two items in array
+    //! DO NOT UNCOMMENT UNTIL READY TO RUN
     // let results = await editAllTexts(urlList);
 
 }
