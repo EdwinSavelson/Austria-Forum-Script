@@ -1,4 +1,4 @@
-# A program I wrote for <a href = "austria-forum.org">Austria-Forum</a> through the Graz University of Technology in Styria, Austria.
+# A program I wrote as a volunteer for <a href = "austria-forum.org">Austria-Forum</a>, a project through Graz University of Technology in Styria, Austria.
 ## Technologies Used:
 - Node.js
 - Selenium
